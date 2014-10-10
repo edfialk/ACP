@@ -1,0 +1,14 @@
+name = Panels CSS & JS
+core = 7.x
+package = Panels
+description = This module allows developers to Inject CSS & JS files and code into a page based on Panels or into a block based on Mini Panels.
+dependencies[] = ctools
+dependencies[] = page_manager
+dependencies[] = panels
+
+; Information added by drupal.org packaging script on 2013-09-24
+version = "7.x-1.1"
+core = "7.x"
+project = "panels_css_js"
+datestamp = "1380016228"
+

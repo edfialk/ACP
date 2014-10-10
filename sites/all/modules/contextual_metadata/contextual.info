@@ -1,0 +1,8 @@
+name = Contextual Metadata
+description = "Enables the display of ACP Contextual Metadata Panels and Requests."
+core = 7.x
+package = "Contextual Metadata"
+dependencies[] = ctools
+dependencies[] = panels
+
+files[] = contextual.module
