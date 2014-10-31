@@ -16,8 +16,6 @@ drupal_add_js(drupal_get_path('theme', 'acp_zen') .'/js/bootstrap.js');
 drupal_add_css(drupal_get_path('theme', 'acp_zen') . '/css/styles.css');
 
 function acp_zen_form_alter(&$form, $form_state, $form_id) {
-  // drupal_set_message("Form ID is : " . $form_id);
-
   // dpm($form);
 
   if (isset($form['actions']) && isset($form['actions']['submit'])){
@@ -52,6 +50,8 @@ function acp_zen_form_alter(&$form, $form_state, $form_id) {
       }
     }
   }
+
+  $form['#description_display'] = 'before';
 }
 
 //show tags as badges
@@ -69,21 +69,15 @@ function acp_zen_preprocess_field(&$variables, $hook){
 }
 
 //set height of ckeditor
-function larsboorg_wysiwyg_editor_settings_alter(&$settings, $context) {
-  dsm($settings);
+function acp_zen_wysiwyg_editor_settings_alter(&$settings, $context) {
+  // dsm($settings);
   if($context['profile']->editor == 'ckeditor') {
     $settings['height'] = 100;
   }
 }
 
-// function acp_zen_menu_link(&$variables) {
-//   dpm($variables);
-// }
 
 
-function acp_zen_js_alter(&$javascript) {
-  // dpm($javascript);
-}
 /**
  * Override or insert variables into the maintenance page template.
  *

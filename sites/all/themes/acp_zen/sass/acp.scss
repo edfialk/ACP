@@ -400,6 +400,38 @@ table {
 	}
 }
 
+/** === CONTEXTUAL METADATA === **/
+.panels-flexible-region {
+	margin-bottom: 20px;
+}
+.panel-pane {
+	position: relative;
+}
+.sortwrap {
+	position: absolute;
+	top: 5px;
+	right: 0;
+}
+.sortby, .sortdir {
+	position: relative;
+	display: inline-block;
+	margin: 0 5px;
+}
+.paper.active {
+/*	background-color: #E7E7E7;
+	background-color: rgba(0,0,0,0.1);
+	margin: 0 -10px;
+	padding: 10px;*/
+}
+.pages a {
+	margin: 0 5px;
+	text-decoration: underline;
+}
+.metapanel hr {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
 /** === BUG REPORT FORM === **/
 .node-bug-form #edit-casetracker td, .node-bug #edit-casetracker td {
 	padding: 10px;
@@ -408,6 +440,20 @@ table {
 	margin-bottom: 0;
 }
 
+/** === NODE EDIT FORM === **/
+.media-widget .button {
+
+}
+
+a.button {
+	padding: 6px;
+	text-decoration: none;
+	cursor: pointer;
+	text-decoration: none;
+}
+a.button:hover {
+	background-color: #BEBEBE;
+}
 
 /** === LOADING ANIMATION === **/
 .spinner {
@@ -452,15 +498,15 @@ table {
 }
 
 @-webkit-keyframes stretchdelay {
-  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }  
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
   20% { -webkit-transform: scaleY(1.0) }
 }
 
 @keyframes stretchdelay {
-  0%, 40%, 100% { 
+  0%, 40%, 100% {
     transform: scaleY(0.4);
     -webkit-transform: scaleY(0.4);
-  }  20% { 
+  }  20% {
     transform: scaleY(1.0);
     -webkit-transform: scaleY(1.0);
   }

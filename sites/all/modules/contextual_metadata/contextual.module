@@ -3,6 +3,7 @@
 define('BASE_URL', variable_get('contextual_baseurl', 'http://ows9.csiss.gmu.edu:9008/acpweb/'));
 define('FEEDS_URL', variable_get('contextual_feedsurl', 'GetFeedsView'));
 define('PAPERS_URL', variable_get('contextual_papersurl', 'GetPapersView'));
+define('REQUEST_URL', variable_get('contextual_requesturl', 'http://54.191.97.139/sites/all/modules/contextual_metadata/request.php'));
 
 /**
  * Implements hook_ctools_plugin_directory().
@@ -41,6 +42,7 @@ function contextual_admin() {
   );
   return system_settings_form($form);
 }
+
 function contextual_menu() {
   $items = array();
   $items['admin/settings/contextual'] = array(
@@ -52,112 +54,6 @@ function contextual_menu() {
     'type' => MENU_NORMAL_ITEM,
    );
   return $items;
-}
-
-
-/**
- * 'admin info' callback for panel pane.
- */
-function contextual_sensor_tags_admin_info($subtype, $conf, $contexts) {
-  if (!empty($conf)) {
-    $block = new stdClass;
-    $block->title = $conf['override_title'] ? $conf['override_title_text'] : '';
-    $block->content = t('Showing @limit feeds from GMU.', array(
-      '@limit' => $conf['limit']
-    ));
-    return $block;
-  }
-}
-function contextual_param_tags_admin_info($subtype, $conf, $contexts) {
-  if (!empty($conf)) {
-    $block = new stdClass;
-    $block->title = $conf['override_title'] ? $conf['override_title_text'] : '';
-    $block->content = t('Showing @limit feeds from GMU.', array(
-      '@limit' => $conf['limit']
-    ));
-    return $block;
-  }
-}
-function contextual_feeds_admin_info($subtype, $conf, $contexts) {
-  if (!empty($conf)) {
-    $block = new stdClass;
-    $block->title = $conf['override_title'] ? $conf['override_title_text'] : '';
-    $block->content = t('Showing @limit feeds from GMU.', array(
-      '@limit' => $conf['limit']
-    ));
-    return $block;
-  }
-}
-
-
-/**
- * 'Edit form' callback for the content type.
- */
-function contextual_sensor_tags_edit_form($form, &$form_state) {
-  $conf = $form_state['conf'];
-
-  $form['limit'] = array(
-    '#title' => t('Number of results'),
-    '#description' => t('Defaults to 100.'),
-    '#type' => 'textfield',
-    '#default_value' => $conf['limit'],
-    '#required' => TRUE,
-  );
-
-  return $form;
-}
-function contextual_param_tags_edit_form($form, &$form_state) {
-  $conf = $form_state['conf'];
-
-  $form['limit'] = array(
-    '#title' => t('Number of results'),
-    '#description' => t('Defaults to 100.'),
-    '#type' => 'textfield',
-    '#default_value' => $conf['limit'],
-    '#required' => TRUE,
-  );
-
-  return $form;
-}
-function contextual_app_tags_edit_form($form, &$form_state) {
-  $conf = $form_state['conf'];
-
-  $form['limit'] = array(
-    '#title' => t('Number of results'),
-    '#description' => t('Defaults to 100.'),
-    '#type' => 'textfield',
-    '#default_value' => $conf['limit'],
-    '#required' => TRUE,
-  );
-
-  return $form;
-}
-
-
-
-/**
- * The submit form stores the data in $conf.
- */
-function contextual_sensor_tags_edit_form_submit($form, &$form_state) {
-  foreach (array_keys($form_state['plugin']['defaults']) as $key) {
-    if (isset($form_state['values'][$key])) {
-      $form_state['conf'][$key] = $form_state['values'][$key];
-    }
-  }
-}
-function contextual_param_tags_edit_form_submit($form, &$form_state) {
-  foreach (array_keys($form_state['plugin']['defaults']) as $key) {
-    if (isset($form_state['values'][$key])) {
-      $form_state['conf'][$key] = $form_state['values'][$key];
-    }
-  }
-}
-function contextual_app_tags_edit_form_submit($form, &$form_state) {
-  foreach (array_keys($form_state['plugin']['defaults']) as $key) {
-    if (isset($form_state['values'][$key])) {
-      $form_state['conf'][$key] = $form_state['values'][$key];
-    }
-  }
 }
 
 function contextual_theme() {
@@ -191,6 +87,12 @@ function contextual_theme() {
     		'template' => 'papers',
     		'path' => drupal_get_path('module', 'contextual') . '/templates',
     		'theme path' => drupal_get_path('module', 'contextual') . '/templates'
-    	)
+    	),
+    	'options' => array(
+    		'render element' => 'data',
+    		'template' => 'options',
+    		'path' => drupal_get_path('module', 'contextual') . '/templates',
+    		'theme path' => drupal_get_path('module', 'contextual') . '/templates'
+    	),
   	);
 }

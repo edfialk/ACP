@@ -40,22 +40,19 @@ drupal_add_js(drupal_get_path('theme', 'acp_zen') . '/js/datatable.js', array('g
 				<label><input type='radio' name="temporal" value='every' checked>All</label>
 			</div>
 			<div class="radio">
-				<label><input type='radio' name="temporal" value='6 Minute(s)'>6 Minute(s)</label>
-			</div>
-			<div class="radio">
-				<label><input type='radio' name="temporal" value='Daily'>Daily</label>
-			</div>
-			<div class="radio">
-				<label><input type='radio' name="temporal" value='Once per day'>Once per day</label>
+				<label><input type='radio' name="temporal" value='6 Minute'>6 Minute</label>
 			</div>
 			<div class="radio">
 				<label><input type='radio' name="temporal" value='Twice per day (daytime and nighttime)'>Twice per day (daytime and nighttime)</label>
 			</div>
 			<div class="radio">
+				<label><input type='radio' name="temporal" value='daily'>Daily</label>
+			</div>
+			<div class="radio">
 				<label><input type='radio' name="temporal" value='Once per 8 days (daytime and nighttime)'>Once per 8 days (daytime and nighttime)</label>
 			</div>
 			<div class="radio">
-				<label><input type='radio' name="temporal" value='Once per Month (daytime and nighttime)'>Once per Month (daytime and nighttime)</label>
+				<label><input type='radio' name="temporal" value='monthly'>Monthly</label>
 			</div>
 		</div>
 		<div class="form-group spatial">
@@ -64,16 +61,16 @@ drupal_add_js(drupal_get_path('theme', 'acp_zen') . '/js/datatable.js', array('g
 				<label><input type='radio' name="spatial" value="every" checked>All</label>
 			</div>
 			<div class="radio">
-				<label><input type='radio' name="spatial" value="0.25 deg x 0.25 deg">0.25 deg x 0.25 deg</label>
+				<label><input type='radio' name="spatial" value="0.25 x 0.25 deg">0.25 x 0.25 deg</label>
 			</div>
 			<div class="radio">
-				<label><input type='radio' name="spatial" value="1x1 deg">1x1 deg</label>
+				<label><input type='radio' name="spatial" value="1 x 1 deg">1 x 1 deg</label>
 			</div>
 			<div class="radio">
-				<label><input type='radio' name="spatial" value="1x1 deg x 1x1 deg">1x1 deg x 1x1 deg</label>
+				<label><input type='radio' name="spatial" value="1.25 x 1 deg">1.25 x 1 deg</label>
 			</div>
 			<div class="radio">
-				<label><input type='radio' name="spatial" value="1.25 deg x 1 deg">1.25 deg x 1 deg</label>
+				<label><input type='radio' name="spatial" value="1.25 x 1.25 deg">1.25 x 1.25 deg</label>
 			</div>
 			<div class="radio">
 				<label><input type='radio' name="spatial" value="50 km x 50 km">50 km x 50 km</label>

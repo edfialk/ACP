@@ -51,6 +51,7 @@ function contextual_papers_edit_form($form, &$form_state) {
 
   return $form;
 }
+
 function contextual_papers_edit_form_submit($form, &$form_state) {
   foreach (array_keys($form_state['plugin']['defaults']) as $key) {
     if (isset($form_state['values'][$key])) {
@@ -64,35 +65,29 @@ function contextual_papers_edit_form_submit($form, &$form_state) {
  * See ctools_plugin_examples for more advanced info
  */
 function contextual_papers_render($subtype, $conf, $panel_args, $context = NULL) {
+
   $block = new stdClass();
   $block->title = '';
 
-  $requestUrl = variable_get('contextual_requesturl', 'http://54.191.97.139/sites/all/modules/contextual_metadata/request.php');
-
-  $filter = '[';
-
-  // $filter .= '{%22operator%22%3A%22=%22%2C%22value%22%3A%22111%22%2C%22property%22%3A%22ms%22}';
-
-  if (!empty($conf['sensor_tag'])){
-    $filter .= ',{%22operator%22%3A%22=%22%2C%22value%22%3A%22%27'.urlencode($conf['sensor_tag']).'%27%22%2C%22property%22%3A%22sensor_tag%22}';
-  }
-  if (!empty($conf['param_tag'])){
-    $filter .= ',{%22operator%22%3A%22=%22%2C%22value%22%3A%22%27'.urlencode($conf['param_tag']).'%27%22%2C%22property%22%3A%22param_tag%22}';
-  }
-  if (!empty($conf['app_tag'])){
-    $filter .= ',{%22operator%22%3A%22=%22%2C%22value%22%3A%22%27'.urlencode($conf['app_tag']).'%27%22%2C%22property%22%3A%22app_tag%22}';
-  }
-  // $filter .= ',{"operator"%3A"lt"%2C"value"%3A"%272014-07-31%27"%2C"property"%3A"pubdate"},{"operator"%3A"gt"%2C"value"%3A"%272014-01-01%27"%2C"property"%3A"pubdate"}]&%20sort=[{"property":"title","direction":"ASC"}';
-  $filter .= ']';
-
-  // $filter = str_replace('+', '%20', $filter);
-
-  $papersurl = BASE_URL.PAPERS_URL."?filter=".$filter;
+  // $requestUrl = variable_get('contextual_requesturl', 'http://54.191.97.139/sites/all/modules/contextual_metadata/request.php');
 
   $block->content = array(
     '#theme' => 'papers',
-    '#content' => array('url' => $requestUrl.'?url='.urlencode($papersurl) ),
+    '#content' => array(
+      'requestUrl' => REQUEST_URL,
+      'sensorTag' => $conf['sensor_tag'],
+      'paramTag' => $conf['param_tag'],
+      'appTag' => $conf['app_tag'],
+      'baseUrl' => BASE_URL,
+      'papersUrl' => PAPERS_URL,
+      'feedsUrl' => FEEDS_URL,
+      'sortby' => variable_get('contextual_sortby', 'title'),
+      'sortdir' => variable_get('contextual_sortdir', 'ASC')
+    ),
   );
+
+  drupal_add_js(array('acp_contextual' => $block->content['#content']), array('type' => 'setting'));
+  drupal_add_js(drupal_get_path('module', 'contextual') .'/main.js');
 
   return $block;
 }

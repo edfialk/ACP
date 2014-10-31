@@ -27,8 +27,30 @@ function contextual_metadata_app_tags_render($subtype, $conf, $panel_args, $cont
 
   $block->content = array(
     '#theme' => 'app_tags',
-    '#content' => array('url' => $serverUrl."?url=".urlencode($requestUrl) )
+    '#content' => array( 'url' => $serverUrl."?url=".urlencode($requestUrl) )
   );
 
   return $block;
+}
+
+function contextual_app_tags_edit_form($form, &$form_state) {
+  $conf = $form_state['conf'];
+
+  $form['limit'] = array(
+    '#title' => t('Number of results'),
+    '#description' => t('Defaults to 100.'),
+    '#type' => 'textfield',
+    '#default_value' => $conf['limit'],
+    '#required' => TRUE,
+  );
+
+  return $form;
+}
+
+function contextual_app_tags_edit_form_submit($form, &$form_state) {
+  foreach (array_keys($form_state['plugin']['defaults']) as $key) {
+    if (isset($form_state['values'][$key])) {
+      $form_state['conf'][$key] = $form_state['values'][$key];
+    }
+  }
 }

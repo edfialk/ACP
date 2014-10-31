@@ -32,3 +32,40 @@ function contextual_metadata_param_tags_render($subtype, $conf, $panel_args, $co
 
   return $block;
 }
+
+function contextual_param_tags_edit_form_submit($form, &$form_state) {
+  foreach (array_keys($form_state['plugin']['defaults']) as $key) {
+    if (isset($form_state['values'][$key])) {
+      $form_state['conf'][$key] = $form_state['values'][$key];
+    }
+  }
+}
+
+
+function contextual_param_tags_edit_form($form, &$form_state) {
+  $conf = $form_state['conf'];
+
+  $form['limit'] = array(
+    '#title' => t('Number of results'),
+    '#description' => t('Defaults to 100.'),
+    '#type' => 'textfield',
+    '#default_value' => $conf['limit'],
+    '#required' => TRUE,
+  );
+
+  return $form;
+}
+
+/**
+ * 'admin info' callback for panel pane.
+ */
+function contextual_param_tags_admin_info($subtype, $conf, $contexts) {
+  if (!empty($conf)) {
+    $block = new stdClass;
+    $block->title = $conf['override_title'] ? $conf['override_title_text'] : '';
+    $block->content = t('Showing @limit feeds from GMU.', array(
+      '@limit' => $conf['limit']
+    ));
+    return $block;
+  }
+}

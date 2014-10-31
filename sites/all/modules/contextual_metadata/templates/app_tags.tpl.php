@@ -1,5 +1,7 @@
 <?php
 
+// drupal_add_js(drupal_get_path('module', 'contextual') .'/main.js');
+
 $content = $data['#content'];
 $url = $content['url'];
 
@@ -15,7 +17,6 @@ $url = $content['url'];
 		var requestUrl = '<?php print $url; ?>';
 		var req = jQuery.getJSON(requestUrl);
 		var $out = jQuery('#app_tags');
-		console.log($out);
 		req.done(function(json){
 			$out.html('');
 			json.rows.forEach(function(row, i, rows){
