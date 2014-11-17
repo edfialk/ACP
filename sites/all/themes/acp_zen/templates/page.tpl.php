@@ -69,6 +69,7 @@
               'direction' => 'down',
               'depth' => -1,
             )); ?>
+            <div class='clearfix'></div>
         </div>
       </nav>
     <?php elseif ($main_menu): ?>

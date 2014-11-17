@@ -104,8 +104,8 @@ table {
 
 /** === HOME PAGE === **/
 .home-intro-row {
-	padding: 19px!important;
-	margin-bottom: 20px!important;
+	padding: 19px !important;
+	margin-bottom: 20px !important;
 }
 @media (max-width: 767px){
 	.panels-flexible-region.col-sm-6 {
@@ -113,16 +113,16 @@ table {
 		margin-bottom: 20px;
 	}
 	.panels-flexible-2 .panels-flexible-region-inside {
-		padding-right: 0!important;
-		padding-left: 0!important;
+		padding-right: 0 !important;
+		padding-left: 0 !important;
 	}
 }
 @media (min-width: 768px){
 	.panels-flexible-region-2-news {
-		width: 50%!important;
+		width: 50% !important;
 	}
 	.panels-flexible-region-2-discussions {
-		width: 50%!important;
+		width: 50% !important;
 	}
 }
 
@@ -277,7 +277,10 @@ table {
 		background: #369;
 		clear: left;
 		margin-left: -10px;
-
+		overflow:hidden;
+	}
+	.nice-menu {
+		background-color: #369;
 	}
 }
 
@@ -378,7 +381,10 @@ table {
 .block-devel-node-access {
 	color: #000;
 }
-
+.links.inline {
+	display: inline-block;
+	margin-bottom: 20px;
+}
 
 /** === HOME PAGE === **/
 .view-id-home_page_intro .btn {

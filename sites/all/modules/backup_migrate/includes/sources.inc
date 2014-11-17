@@ -38,6 +38,18 @@ function backup_migrate_create_source($subtype, $params = array()) {
   return backup_migrate_crud_create_item('source', $params);
 }
 
+/** 
+* Helper funciton to determine the type of the database we're dealing with
+*/
+function backup_migrate_get_db_type() {
+	global $databases;
+	foreach ((array)$databases as $db_key => $target) {
+  	foreach ((array)$target as $tgt_key => $info) {
+    	return $info['driver'];
+		}
+	}
+}
+
 /**
  * Implementation of hook_backup_migrate_source_subtypes().
  *
@@ -52,6 +64,13 @@ function backup_migrate_backup_migrate_source_subtypes() {
       'file' => drupal_get_path('module', 'backup_migrate') .'/includes/sources.db.inc',
       'class' => 'backup_migrate_source_db',
       'can_create' => FALSE,
+    ),
+    'pgsql' => array(
+      'type_name' => t('PostgreSQL Database'),
+      'description' => t('Import the backup directly into another PostgreSQL database. Database sources can also be used as a source to backup from.'),
+      'file' => drupal_get_path('module', 'backup_migrate') .'/includes/sources.db.pgsql.inc',
+      'class' => 'backup_migrate_source_db_pgsql',
+      'can_create' => TRUE,
     ),
     'mysql' => array(
       'type_name' => t('MySQL Database'),

@@ -40,7 +40,7 @@ drupal_add_js(drupal_get_path('theme', 'acp_zen') . '/js/datatable.js', array('g
 				<label><input type='radio' name="temporal" value='every' checked>All</label>
 			</div>
 			<div class="radio">
-				<label><input type='radio' name="temporal" value='6 Minute'>6 Minute</label>
+				<label><input type='radio' name="temporal" value='6 minute'>6 minute</label>
 			</div>
 			<div class="radio">
 				<label><input type='radio' name="temporal" value='Twice per day (daytime and nighttime)'>Twice per day (daytime and nighttime)</label>
