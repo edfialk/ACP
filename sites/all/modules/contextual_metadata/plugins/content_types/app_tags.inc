@@ -5,9 +5,9 @@ $plugin = array(
   'title' => t('App Tags'),
   'description' => t('Shows the feed list of app tags retrieved from GMU.'),
   'category' => t('Contextual Metadata'),
-  'edit form' => 'contextual_metadata_param_tags_edit_form',
-  'render callback' => 'contextual_metadata_app_tags_render',
-  'admin info' => 'contextual_metadata_param_tags_admin_info',
+  'edit form' => 'metadata_param_tags_edit_form',
+  'render callback' => 'metadata_app_tags_render',
+  'admin info' => 'metadata_param_tags_admin_info',
   'defaults' => array(
     'limit' => 100
   )
@@ -17,12 +17,12 @@ $plugin = array(
  * Run-time rendering of the body of the block (content type)
  * See ctools_plugin_examples for more advanced info
  */
-function contextual_metadata_app_tags_render($subtype, $conf, $panel_args, $context = NULL) {
+function metadata_app_tags_render($subtype, $conf, $panel_args, $context = NULL) {
   $block = new stdClass();
 
   $block->title = '';
 
-  $serverUrl = variable_get('contextual_requesturl', 'http://54.191.97.139/sites/all/modules/contextual_metadata/request.php');
+  $serverUrl = variable_get('metadata_requesturl', 'http://54.191.97.139/sites/all/modules/contextual_metadata/request.php');
   $requestUrl = BASE_URL.FEEDS_URL."?limit=100&getdistvaluefield=app_tag";
 
   $block->content = array(
@@ -33,7 +33,7 @@ function contextual_metadata_app_tags_render($subtype, $conf, $panel_args, $cont
   return $block;
 }
 
-function contextual_app_tags_edit_form($form, &$form_state) {
+function metadata_app_tags_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
 
   $form['limit'] = array(
@@ -47,7 +47,7 @@ function contextual_app_tags_edit_form($form, &$form_state) {
   return $form;
 }
 
-function contextual_app_tags_edit_form_submit($form, &$form_state) {
+function metadata_app_tags_edit_form_submit($form, &$form_state) {
   foreach (array_keys($form_state['plugin']['defaults']) as $key) {
     if (isset($form_state['values'][$key])) {
       $form_state['conf'][$key] = $form_state['values'][$key];

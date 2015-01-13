@@ -5,9 +5,9 @@ $plugin = array(
   'title' => t('Sensor Tags'),
   'description' => t('Shows the feed list of sensor tags retrieved from GMU.'),
   'category' => t('Contextual Metadata'),
-  'edit form' => 'contextual_metadata_sensor_tags_edit_form',
-  'render callback' => 'contextual_metadata_sensor_tags_render',
-  'admin info' => 'contextual_metadata_sensor_tags_admin_info',
+  'edit form' => 'metadata_sensor_tags_edit_form',
+  'render callback' => 'metadata_sensor_tags_render',
+  'admin info' => 'metadata_sensor_tags_admin_info',
   'defaults' => array(
     'limit' => 100
   )
@@ -17,12 +17,12 @@ $plugin = array(
  * Run-time rendering of the body of the block (content type)
  * See ctools_plugin_examples for more advanced info
  */
-function contextual_metadata_sensor_tags_render($subtype, $conf, $panel_args, $context = NULL) {
+function metadata_sensor_tags_render($subtype, $conf, $panel_args, $context = NULL) {
   $block = new stdClass();
 
   $block->title = '';
 
-  $serverUrl = variable_get('contextual_requesturl', 'http://54.191.97.139/sites/all/modules/contextual_metadata/request.php');
+  $serverUrl = variable_get('metadata_requesturl', 'http://54.191.97.139/sites/all/modules/contextual_metadata/request.php');
   $requestUrl = BASE_URL.FEEDS_URL."?limit=100&getdistvaluefield=sensor_tag";
 
   $block->content = array(
@@ -36,7 +36,7 @@ function contextual_metadata_sensor_tags_render($subtype, $conf, $panel_args, $c
 /**
  * 'Edit form' callback for the content type.
  */
-function contextual_sensor_tags_edit_form($form, &$form_state) {
+function metadata_sensor_tags_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
 
   $form['limit'] = array(
@@ -53,7 +53,7 @@ function contextual_sensor_tags_edit_form($form, &$form_state) {
 /**
  * The submit form stores the data in $conf.
  */
-function contextual_sensor_tags_edit_form_submit($form, &$form_state) {
+function metadata_sensor_tags_edit_form_submit($form, &$form_state) {
   foreach (array_keys($form_state['plugin']['defaults']) as $key) {
     if (isset($form_state['values'][$key])) {
       $form_state['conf'][$key] = $form_state['values'][$key];
@@ -64,7 +64,7 @@ function contextual_sensor_tags_edit_form_submit($form, &$form_state) {
 /**
  * 'admin info' callback for panel pane.
  */
-function contextual_sensor_tags_admin_info($subtype, $conf, $contexts) {
+function metadata_sensor_tags_admin_info($subtype, $conf, $contexts) {
   if (!empty($conf)) {
     $block = new stdClass;
     $block->title = $conf['override_title'] ? $conf['override_title_text'] : '';

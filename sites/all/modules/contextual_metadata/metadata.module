@@ -1,0 +1,103 @@
+<?php
+
+define('BASE_URL', variable_get('metadata_baseurl', 'http://ows9.csiss.gmu.edu:9008/acpweb/'));
+define('FEEDS_URL', variable_get('metadata_feedsurl', 'GetFeedsView'));
+define('PAPERS_URL', variable_get('metadata_papersurl', 'GetPapersView'));
+define('REQUEST_URL', variable_get('metadata_requesturl', 'http://54.191.97.139/sites/all/modules/contextual_metadata/request.php'));
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function metadata_ctools_plugin_directory($module, $plugin) {
+  if ( ($module == 'ctools' || $module == 'page_manager') && ($plugin == 'content_types' || $plugin == 'page_wizards') ) {
+    return 'plugins/'.$plugin;
+  }
+}
+
+/**
+ * Admin configuration menu
+ */
+function metadata_admin() {
+  $form = array();
+  $form['metadata_baseurl'] = array(
+    '#type' => 'textfield',
+    '#title' => t('GMU Base URL'),
+    '#default_value' => variable_get('metadata_baseurl', 'http://ows9.csiss.gmu.edu:9008/acpweb/'),
+    '#description' => t("The base url for all metadata requests. Please include trailing slash."),
+    '#required' => TRUE,
+  );
+  $form['metadata_feedsurl'] = array(
+  	'#type' => 'textfield',
+  	'#title' => t('FeedsView endpoint url'),
+  	'#default_value' => variable_get('metadata_feedsurl', 'GetFeedsView'),
+  	'#description' => t('The chunk for FeedsView requests.'),
+  	'#required' => TRUE,
+  );
+  $form['metadata_papersurl'] = array(
+  	'#type' => 'textfield',
+  	'#title' => t('PapersView endpoint url'),
+  	'#default_value' => variable_get('metadata_papersurl', 'GetPapersView'),
+  	'#description' => t('The chunk for PapersView requests.'),
+  	'#required' => TRUE,
+  );
+  return system_settings_form($form);
+}
+
+function metadata_menu() {
+  $items = array();
+  $items['admin/contextual/settings'] = array(
+    'title' => 'Contextual metadata module settings',
+    'description' => 'Settings for the contextual metadata module',
+    // 'page callback' => 'drupal_get_form',
+     'page callback' => 'metadata_admin_page',
+    'page arguments' => array('metadata_admin'),
+    'access arguments' => array('administer Contextual Metadata settings'),
+    'type' => MENU_NORMAL_ITEM,
+   );
+  return $items;
+}
+
+function metadata_theme() {
+  	return array(
+    	'sensor_tags' => array(
+     	 	'render element' => 'data',
+    		'template' => 'sensor_tags',
+    		'path' => drupal_get_path('module', 'metadata') . '/templates',
+    		'theme path' => drupal_get_path('module', 'metadata') . '/templates',
+    	),
+    	'param_tags' => array(
+    		'render element' => 'data',
+    		'template' => 'param_tags',
+    		'path' => drupal_get_path('module', 'metadata') . '/templates',
+    		'theme path' => drupal_get_path('module', 'metadata') . '/templates'
+    	),
+    	'app_tags' => array(
+    		'render element' => 'data',
+    		'template' => 'app_tags',
+    		'path' => drupal_get_path('module', 'metadata') . '/templates',
+    		'theme path' => drupal_get_path('module', 'metadata') . '/templates'
+    	),
+    	'feeds' => array(
+    		'render element' => 'data',
+    		'template' => 'feeds',
+    		'path' => drupal_get_path('module', 'metadata') . '/templates',
+    		'theme path' => drupal_get_path('module', 'metadata') . '/templates'
+    	),
+    	'papers' => array(
+    		'render element' => 'data',
+    		'template' => 'papers',
+    		'path' => drupal_get_path('module', 'metadata') . '/templates',
+    		'theme path' => drupal_get_path('module', 'metadata') . '/templates'
+    	),
+    	'options' => array(
+    		'render element' => 'data',
+    		'template' => 'options',
+    		'path' => drupal_get_path('module', 'metadata') . '/templates',
+    		'theme path' => drupal_get_path('module', 'metadata') . '/templates'
+    	),
+  	);
+}
+
+function metadata_admin_page() {
+  return theme('metadata_dashbaord');
+}

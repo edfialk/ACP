@@ -5,4 +5,4 @@ package = "Contextual Metadata"
 dependencies[] = ctools
 dependencies[] = panels
 
-files[] = contextual.module
+files[] = metadata.module

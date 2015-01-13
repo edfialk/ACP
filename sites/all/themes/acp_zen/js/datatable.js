@@ -13,7 +13,7 @@
   var dataSourceUrl = 'https://docs.google.com/spreadsheet/pub?key='+spreadsheetKey+'&pub=1';
   // var jsonUrl = 'https://spreadsheets.google.com/feeds/list/'+spreadsheetKey+'/od6/public/values?alt=json';
   var jsonUrl = 'http://54.191.97.139/goog.php';
-  var $table, data, $req, options, filters, $container, $intro;
+  var $table, $intro, $temporal, $spatial, temporals, spatials;
   var ready = false;
 
   $(document).ready(function(){
@@ -23,11 +23,33 @@
 	function init(){
 
     $intro = $('.intro');
-    $container = $('.table-container');
+    $temporal = $('.temporal');
+    $spatial = $('.spatial');
 
     $table = $('#table').DataTable({
-      'ajax' : {
-        url: jsonUrl,
+      'ajax' : function(data, callback, settings){
+        var self = this;
+        $.getJSON(jsonUrl, function(json){
+          if (json.status == 'error'){
+            $('.alerts').html("<div class='alert alert-danger'>The server returned an error: " + json.message + "</div>");
+          }else if (json.status == 'warning'){
+            var $alert = $("<div class='alert alert-warning alert-dismissable'><button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button></div>");
+            json.message.forEach(function(msg){
+              $alert.append("<p>"+msg+"</p>");
+            });
+            $('.alerts').html($alert);
+          }
+
+          temporals = json.temporals;
+          temporals.sort();
+          spatials = json.spatials;
+          spatials.sort();
+
+          callback(json);
+          self.trigger('xhr.dt');
+        }).fail(function(jqxhr, text, error){
+            $('.alerts').html("<div class='alert alert-danger'>Request failed: " + text + "</div>");
+        });
       },
       'columnDefs': [
         {
@@ -53,7 +75,7 @@
       ready = true;
     });
 
-    $('#datatable-options input').on('change', function(){
+    var inputHandler = function(){
       if (ready){
         $intro.hide();
         $table.draw();
@@ -64,6 +86,61 @@
           $table.draw();
         });
       }
+    }
+
+    $('#datatable-options input').on('change', inputHandler);
+
+    $('.showMore', $temporal).click(function(e){
+      e.preventDefault();
+      var $this = $(this);
+      var go = function(){
+        $this.text() == 'More' ? $this.html('Less') : $this.html('More');
+
+        if ($('.extra', $temporal).length > 0){
+          $('.extra', $temporal).toggleClass('hidden');
+        }else{
+          $('#datatable-options input').off('change');
+          var current = [];
+          $('input', $temporal).each(function(i, input){
+            current.push(input.value.toLowerCase());
+          });
+          temporals.forEach(function(temporal){
+            if (current.indexOf(temporal.toLowerCase()) == -1){
+              var $opt = $("<div class='radio extra'><label><input type='radio' name='temporal' value='"+temporal+"'>"+temporal+"</label></div>");
+              $this.before($opt);
+            }
+          });
+          $('#datatable-options input').on('change', inputHandler);
+        }
+      }
+
+      ready ? go() : $table.on('xhr.dt', go);
+
+    });
+    $('.showMore', $spatial).click(function(e){
+      e.preventDefault();
+      var $this = $(this);
+      var go = function(){
+        $this.text() == 'More' ? $this.html('Less') : $this.html('More');
+
+        if ($('.extra', $spatial).length > 0){
+          $('.extra', $spatial).toggleClass('hidden');
+        }else{
+          $('#datatable-options input').off('change');
+          var current = [];
+          $('input', $spatial).each(function(i, input){
+            current.push(input.value.toLowerCase());
+          });
+          spatials.forEach(function(spatial){
+            if (current.indexOf(spatial.toLowerCase()) == -1){
+              var $opt = $("<div class='radio extra'><label><input type='radio' name='spatial' value='"+spatial+"'>"+spatial+"</label></div>");
+              $this.before($opt);
+            }
+          });
+          $('#datatable-options input').on('change', inputHandler);
+        }
+      }
+      ready ? go() : $table.on('xhr.dt', go);
     });
 
     //this is the table filtering function run on each row, return true to show the row, false to hide it
@@ -71,14 +148,25 @@
       function( oSettings, aData, iDataIndex ) {
         var show = false; //default to hide row
 
-        $('.params input:checked').each(function(){
+        var $params = $('.params input:checked');
+        var $services = $('.services input:checked');
+
+        $params.each(function(){
           if ($(this).prop('checked') && aData[this.value] !== ''){
             show = true;
           }
         });
 
-        $(".services input:checked").each(function(){
-          show &= (aData[this.value] !== '');
+        $services.each(function(){
+          if ($params.length == 0){
+            //if only services are checked, show all rows with any of those services
+            if (aData[this.value] != ''){
+              show = true;
+            }
+          }else{
+            //if param is checked, filter param rows by checked services
+            show &= (aData[this.value] !== '');
+          }
         });
 
         var temporal = $("input[name='temporal']:checked").val();

@@ -183,76 +183,65 @@ table {
 #footer .block {
 	margin-bottom: 0;
 }
-
-.sidebars {
-	/*background: #072B8A url('../images/sidebar-gradient.png') repeat-x 0% 0%;*/
-}
 .sidebars, .sidebars a {
 	color: #FFF;
 }
 .sidebar-first .region-sidebar-first {
-	/*width: 200px;*/
 	min-height: 100%;
 }
 .sidebar-first #content {
 	min-height: 100%;
-	/*margin-left: 200px;*/
-	/*width: 85%;*/
 }
-
 #logo_container {
 	max-width: 1180px;
 	margin-left: auto;
 	margin-right: auto;
 }
+$nav-bg: #369;
+$nav-bg2: #7BA3CA;
+$nav-color: #FFF;
+$nav-color2: #333;
 #navigation {
 	width: 100%;
 	position: relative;
-	background: #369;
+	background-color: $nav-bg;
 	text-transform: uppercase;
 	min-height: 48px;
-
+	top: 0;
+	height: 3em;
 	li {
 		border: 0;
-		background-color: #369;
+		background-color: $nav-bg;
 		min-height: 48px;
 		line-height: 48px;
 		&:hover {
-			background: #7BA3CA;
 			cursor: pointer;
+		}
+		&.active-trail, &:hover {
+			background: $nav-bg2;
 			a {
-				color: #333;
+				color: $nav-color2;
 			}
 		}
-		&.active-trail {
-			background: #7BA3CA;
-			a {
-				color: #333;
-			}
-		}
-		&.menuparent:hover {
-			background: #7BA3CA url("../images/menu-expanded.png") 90% center no-repeat;
+		&.menuparent.active-trail, &.menuparent:hover {
+			background: $nav-bg2 url("../images/menu-expanded.png") 90% center no-repeat;
 			li a {
-				color: #FFF;
+				color: $nav-color;
 			}
-		}
-		&.menuparent.active-trail {
-			background: #7BA3CA url("../images/menu-expanded.png") 90% center no-repeat;
 		}
 	}
 
 	a {
-		color: #FFF;
+		color: $nav-color;
 		text-decoration: none;
 		padding: 0 10px;
 		&:hover {
-			color: #333;
+			color: $nav-color2;
 		}
 	}
 
 	.menuparent {
-		background: #369 url("../images/menu-expanded-white.png") 90% center no-repeat;
-		margin-right: 5px;
+		background: $nav-bg url("../images/menu-expanded-white.png") 90% center no-repeat;
 		ul {
 			top: 48px;
 			white-space: nowrap;
@@ -261,26 +250,44 @@ table {
 			min-width: 18.5em;
 		}
 		a {
-		padding-right: 20px;
+			padding-right: 20px;
 		}
 	}
-
 	.navbar-toggle {
 		float: left;
-		background: #FFF;
+		background: $nav-color;
 		margin-bottom: 5px;
 		.icon-bar {
 			background: #888;
 		}
 	}
-	.navbar-collapse.in {
-		background: #369;
-		clear: left;
-		margin-left: -10px;
-		overflow:hidden;
-	}
-	.nice-menu {
-		background-color: #369;
+	@media (max-width: 768px) {
+		.navbar-collapse.in, .collapsing {
+			/** responsive menu **/
+			clear: left;
+			margin-left: -10px;
+			padding-left: 0;
+			overflow:hidden;
+			li {
+				float: none;
+			}
+			.menuparent {
+				background: #336699 url("../images/menu-expanded-white.png") 240px 22px no-repeat;
+				& > a {
+					border-top: 1px solid $nav-bg2;
+					border-bottom: 1px solid $nav-bg2;
+				}
+				ul {
+					opacity: 1!important;
+					display: block!important;
+					visibility: visible!important;
+					position: relative;
+					left: 0;
+					top: 0;
+				}
+			}
+			transition-duration: 0s;
+		}
 	}
 }
 
@@ -397,8 +404,18 @@ table {
 		font-size: 16px;
 		margin-bottom: 5px;
 	}
+	.radio, .checkbox {
+		margin-bottom: 5px;
+	}
+	.radio label, .checkbox label {
+		padding-left: 15px;
+	}
+	.radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+		margin-left: -15px;
+	}
 }
 #datatable-display {
+
 	overflow: auto;
 	.intro {
 		font-size: 18px;
@@ -410,6 +427,13 @@ table {
 .panels-flexible-region {
 	margin-bottom: 20px;
 }
+@media (max-width: 768px){
+	.panels-flexible-region-inside {
+		padding-left: 0px!important;
+		padding-right: 0px!important;
+	}
+}
+
 .panel-pane {
 	position: relative;
 }
@@ -417,6 +441,10 @@ table {
 	position: absolute;
 	top: 5px;
 	right: 0;
+	@media (max-width: 500px){
+		position: relative;
+		top: 0;
+	}
 }
 .sortby, .sortdir {
 	position: relative;

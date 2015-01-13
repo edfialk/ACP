@@ -1,50 +1,19 @@
 <?php
 
+/**
+ *  SO, Google Spreadsheet API is hacked together and left behind. Formulas (i.e. hyperlinks) are ONLY retrievable through a private cell feed.
+ *  I could have created a google user, requested permission to the sheet, use OAuth and parse cell feed.
+ *  Instead I went with using the spreadsheet html table as a datasource, assuming it will change as infrequently as google's spreadsheet api.
+ *  The cons are it might change and the table ID or row query here will need to be updated, but it's much, much faster.
+ */
+
 header('Content-type: application/json; charset=UTF-8');
 
-$url = 'https://docs.google.com/spreadsheet/pub?key=0Aiz9YvG1OtuddFRmYWx3OVd2MDVoRWp6VDkyVDY5V0E&single=true&gid=0&output=html';
+$_GOOGLE_URL = 'https://docs.google.com/spreadsheet/pub?key=0Aiz9YvG1OtuddFRmYWx3OVd2MDVoRWp6VDkyVDY5V0E&single=true&gid=0&output=html';
+$_CONTENT_TABLE_ID = 'tblMain';
 
-// $file = file_get_contents($url);
-// $file = str_replace('âœ”', 'check', $file);
-
-$ch = curl_init();
-curl_setopt_array($ch,
-	array(
-		CURLOPT_URL => $url,
-		CURLOPT_RETURNTRANSFER => true
-	)
-);
-
-$file = curl_exec($ch);
-
-$doc = new DOMDocument();
-$doc->loadHTML($file);
-$xpath = new DOMXpath($doc);
-
-//display column order for Drupal table
-$drupalHeaders = array(
-	'Dataset Name',
-	'Data Provider',
-	'CH4',
-	'CO',
-	'CO2',
-	'NO2',
-	'O3',
-	'SO2',
-	'Temporal Resolution',
-	'Spatial Resolution',
-	'Catalog',
-	'FTP',
-	'HTTP',
-	'OPeNDAP',
-	'WCS',
-	'WMS',
-	'Notes',
-	'Metadata Source'
-);
-
-//google's column index
-$googleHeaders = array(
+//column index at google url
+$_GOOGLE_COLUMNS = array(
 	'name' => 2,
 	'provider' => 3,
 	'ch4' => 4,
@@ -65,24 +34,40 @@ $googleHeaders = array(
 	'source' => 19
 );
 
-$output = array();
-// array_push($output, $drupalHeaders);
+$ch = curl_init();
+curl_setopt_array($ch,
+	array(
+		CURLOPT_URL => $_GOOGLE_URL,
+		CURLOPT_RETURNTRANSFER => true
+	)
+);
+$file = curl_exec($ch);
 
-//content table has id "tblMain"
-//header table has class "colHead_0"
+$doc = new DOMDocument();
+$doc->loadHTML($file);
+$xpath = new DOMXpath($doc);
 
-$table = $xpath->query('//table[@id="tblMain"]');
+$output = array('data' => array());
+
+$temporals = array();
+$spatials = array();
+
+$table = $xpath->query('//table[@id="'.$_CONTENT_TABLE_ID.'"]');
 if ($table->length == 0){
-	//error
+	error('Cannot find google table at <a href="'.$url.'">request url</a>. Please verify content table still has id: "'.$_CONTENT_TABLE_ID.'" or update in goog.php');
 }
 $table = $table->item(0);
 
-$trs = $xpath->query('.//tr[@dir="ltr"]', $table);
+$trs = $xpath->query('.//tr', $table);
 if ($trs->length == 0){
-	//error
+	error('Cannot find any rows in google table at <a href="'.$url.'">request url</a>.');
 }
 
 foreach($trs as $tr){
+	if ($tr->hasAttribute('class') && $tr->getAttribute('class') == 'rShim'){
+		continue; //useless google table row for column widths;
+	}
+
 	$cells = $xpath->query('.//td', $tr);
 	$name = getCell($cells, 'name');
 	$provider = getCell($cells, 'provider');
@@ -124,10 +109,23 @@ foreach($trs as $tr){
 	array_push($row, getHtml($notes));
 	array_push($row, getHtml($source));
 
-	array_push($output, $row);
+	array_push($output['data'], $row);
+
+	$temp = trim($tempRes->nodeValue);
+	$spat = trim($spatRes->nodeValue);
+
+	if ($temp != '' && !in_array($temp, $temporals)){
+		array_push($temporals, $temp);
+	}
+	if ($spat != '' && !in_array($spat, $spatials)){
+		array_push($spatials, $spat);
+	}
 }
 
-echo json_encode(array('data' => $output));
+$output['temporals'] = $temporals;
+$output['spatials'] = $spatials;
+
+echo json_encode($output);
 
 /*$headers = getHeaders($xpath);
 
@@ -153,24 +151,47 @@ function getHeaders($xpath){
 			//dn is display:none, so hidden column, hd is useless no idea why its there
 			continue;
 		}
-		//unfinished, screw it can't reorder columns yet
+		//unfinished, so can't reorder columns yet
 	}
 }*/
 
 function getCell($cells, $index){
-	global $googleHeaders;
+	global $_GOOGLE_COLUMNS;
 
-	if (!isset($googleHeaders[$index])){
-		//error
+	if (!isset($_GOOGLE_COLUMNS[$index])){
+		warning('Cannot find google spreadsheet column for index: '.$index.', this column will be blank.');
+		return null;
 	}
 
-	return $cells->item($googleHeaders[$index]);
+	return $cells->item($_GOOGLE_COLUMNS[$index]);
 }
 function getHtml($node){
+	if (is_null($node)){
+		return '';
+	}
 	if ($node->hasChildNodes()){
 		return $node->ownerDocument->saveHTML($node->firstChild);
 	}else{
 		return $node->nodeValue;
 	}
+}
+function error($msg){
+	echo json_encode(
+		array(
+			'status' => 'error',
+			'message' => $msg
+		)
+	);
+	die();
+}
+function warning($msg){
+	global $output;
+	if (!isset($output['status'])){
+		$output['status'] = 'warning';
+	}
+	if (!isset($output['message'])){
+		$output['message'] = array();
+	}
+	array_push($output['message'], $msg);
 }
 ?>
