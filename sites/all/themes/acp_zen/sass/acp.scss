@@ -103,19 +103,22 @@ table {
 }
 
 /** === HOME PAGE === **/
-.home-intro-row {
+/*.home-intro-row {
 	padding: 19px !important;
 	margin-bottom: 20px !important;
+}*/
+.panels-flexible-row-inside {
+	padding: 20px;
 }
 @media (max-width: 767px){
 	.panels-flexible-region.col-sm-6 {
 		width: 100%;
 		margin-bottom: 20px;
 	}
-	.panels-flexible-2 .panels-flexible-region-inside {
+/*	.panels-flexible-2 .panels-flexible-region-inside {
 		padding-right: 0 !important;
 		padding-left: 0 !important;
-	}
+	}*/
 }
 @media (min-width: 768px){
 	.panels-flexible-region-2-news {
@@ -205,7 +208,6 @@ $nav-color2: #333;
 	width: 100%;
 	position: relative;
 	background-color: $nav-bg;
-	text-transform: uppercase;
 	min-height: 48px;
 	top: 0;
 	height: 3em;

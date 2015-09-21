@@ -10,8 +10,7 @@
     $('div.form-item div.layout-icon').click(function() {
       $widget = $('input', $(this).parent());
       // Toggle if a checkbox, turn on if a radio.
-      // $widget.attr('checked', !$widget.attr('checked') || $widget.is('input[type=radio]'));
-      $widget.prop('checked', !$widget.prop('checked') || $widget.is('input[type=radio]'));
+      $widget.attr('checked', !$widget.attr('checked') || $widget.is('input[type=radio]'));
     });
   };
 

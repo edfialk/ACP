@@ -1,5 +1,5 @@
 var Metadata = Metadata || {};
-console = console || {log: function(){}};
+var console = console || {log: function(){}};
 
 jQuery(function($){
 
@@ -7,8 +7,12 @@ jQuery(function($){
 		baseUrl: "http://ows9.csiss.gmu.edu:9008/acpweb/",
 		feedsUrl: "GetFeedsView",
 		papersUrl: "GetPapersView",
-		requestUrl: "/sites/all/modules/contextual_metadata/request.php"
+		requestUrl: "/sites/all/modules/contextual_metadata/request.php",
+		papersFields: "paper_id,doi,title,abstract,pyear,payload",
+		feedsFields: "feed_id,link,title,pubdate,description,payload"
 	};
+
+	console.log('metadata config: %O', Metadata.config);
 
 	Metadata.baseUrl = Metadata.config.baseUrl;
 	Metadata.feedsUrl = Metadata.config.feedsUrl;
@@ -54,6 +58,14 @@ jQuery(function($){
 		}else{
 			gmuUrl += "&filter=" + filter;
 		}
+
+		if (options.type == 'feeds'){
+			gmuUrl += '&outfields='+this.config.feedsFields;
+		}else if (options.type == 'papers'){
+			gmuUrl += '&outfields='+this.config.papersFields;
+		}
+
+		// gmuUrl += "&outfields=title,link,author,";
 
 		console.log('metadata request to: ' + gmuUrl);
 

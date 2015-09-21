@@ -451,16 +451,16 @@ function panels_metadata_page_finish(&$form_state) {
     $pane->access = array();
     $pane->configuration = array(
       'limit' => '100',
-      'sensor_tag' => $options['defaults']['sensor'],
-      'param_tag' => $options['defaults']['parameter'],
-      'app_tag' => $options['defaults']['app'],
+      'sensor_tag' => $defaults['sensor'],
+      'param_tag' => $defaults['parameter'],
+      'app_tag' => $defaults['app'],
       'override_title' => 1,
       'override_title_text' => 'Papers',
     );
     $pane->cache = array();
     $pane->style = array(
       'settings' => NULL,
-      'style' => 'rounded_corners',
+      'style' => 'rounded corners',
     );
     $pane->css = array(
       'css_id' => '',
@@ -485,9 +485,9 @@ function panels_metadata_page_finish(&$form_state) {
     $pane->access = array();
     $pane->configuration = array(
       'limit' => '100',
-      'sensor_tag' => $options['defaults']['sensor'],
-      'param_tag' => $options['defaults']['parameter'],
-      'app_tag' => $options['defaults']['app'],
+      'sensor_tag' => $defaults['sensor'],
+      'param_tag' => $defaults['parameter'],
+      'app_tag' => $defaults['app'],
       'override_title' => 1,
       'override_title_text' => 'Feeds',
     );
@@ -518,16 +518,16 @@ function panels_metadata_page_finish(&$form_state) {
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
-      'sensor_tag' => $options['defaults']['sensor'],
-      'param_tag' => $options['defaults']['parameter'],
-      'app_tag' => $options['defaults']['app'],
+      'sensor_tag' => $defaults['sensor'],
+      'param_tag' => $defaults['parameter'],
+      'app_tag' => $defaults['app'],
       'override_title' => 0,
       'override_title_text' => '',
     );
     $pane->cache = array();
     $pane->style = array(
       'settings' => NULL,
-      'style' => 'default',
+      'style' => 'rounded corners',
     );
     $pane->css = array();
     $pane->extras = array();

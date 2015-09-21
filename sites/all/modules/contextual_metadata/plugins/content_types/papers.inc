@@ -82,7 +82,8 @@ function metadata_papers_render($subtype, $conf, $panel_args, $context = NULL) {
       'papersUrl' => PAPERS_URL,
       'feedsUrl' => FEEDS_URL,
       'sortby' => variable_get('metadata_sortby', 'title'),
-      'sortdir' => variable_get('metadata_sortdir', 'ASC')
+      'sortdir' => variable_get('metadata_sortdir', 'ASC'),
+      'papersFields' => variable_get('metadata_papersfields', 'aper_id,doi,title,abstract,pyear,payload'),
     ),
   );
 

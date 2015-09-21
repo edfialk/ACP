@@ -9,30 +9,33 @@
 
 header('Content-type: application/json; charset=UTF-8');
 
-$_GOOGLE_URL = 'https://docs.google.com/spreadsheet/pub?key=0Aiz9YvG1OtuddFRmYWx3OVd2MDVoRWp6VDkyVDY5V0E&single=true&gid=0&output=html';
+// $_GOOGLE_URL = 'https://docs.google.com/spreadsheet/pub?key=0Aiz9YvG1OtuddFRmYWx3OVd2MDVoRWp6VDkyVDY5V0E&single=true&gid=0&output=html';
+$_GOOGLE_URL = 'https://docs.google.com/spreadsheets/d/1iygGfloRwc9xup-23JRZ01wsugZHdxFIGniPUkQLnaE/pub?single=true&gid=0&output=html';
 $_CONTENT_TABLE_ID = 'tblMain';
 
 //column index at google url
+
 $_GOOGLE_COLUMNS = array(
-	'name' => 2,
-	'provider' => 3,
-	'ch4' => 4,
-	'co' => 5,
-	'co2' => 6,
-	'no2' => 7,
-	'o3' => 8,
-	'so2' => 9,
-	'tempRes' => 10,
-	'spatRes' => 11,
-	'catalog' => 12,
-	'ftp' => 13,
-	'http' => 14,
-	'opendap' => 15,
-	'wcs' => 16,
-	'wms' => 17,
-	'notes' => 18,
-	'source' => 19
+	'name' => 0,
+	'provider' => 1,
+	'ch4' => 2,
+	'co' => 3,
+	'co2' => 4,
+	'no2' => 5,
+	'o3' => 6,
+	'so2' => 7,
+	'tempRes' => 8,
+	'spatRes' => 9,
+	'catalog' => 11,
+	'ftp' => 12,
+	'http' => 13,
+	'opendap' => 14,
+	'wcs' => 15,
+	'wms' => 16,
+	'notes' => 17,
+	'source' => 18
 );
+
 
 $ch = curl_init();
 curl_setopt_array($ch,
@@ -52,9 +55,9 @@ $output = array('data' => array());
 $temporals = array();
 $spatials = array();
 
-$table = $xpath->query('//table[@id="'.$_CONTENT_TABLE_ID.'"]');
+$table = $xpath->query('//table');
 if ($table->length == 0){
-	error('Cannot find google table at <a href="'.$url.'">request url</a>. Please verify content table still has id: "'.$_CONTENT_TABLE_ID.'" or update in goog.php');
+	error('Cannot find google table at <a href="'.$_GOOGLE_URL.'">request url</a>. Please update in goog.php');
 }
 $table = $table->item(0);
 
@@ -163,6 +166,10 @@ function getCell($cells, $index){
 		return null;
 	}
 
+	if ($index == 'ch4'){
+		// echo 'ch4: '.$cells->item($_GOOGLE_COLUMNS[$index])."\n";
+	}
+
 	return $cells->item($_GOOGLE_COLUMNS[$index]);
 }
 function getHtml($node){
@@ -170,10 +177,12 @@ function getHtml($node){
 		return '';
 	}
 	if ($node->hasChildNodes()){
-		return $node->ownerDocument->saveHTML($node->firstChild);
+		$html = $node->ownerDocument->saveHTML($node->firstChild);
 	}else{
-		return $node->nodeValue;
+		$html = $node->nodeValue;
 	}
+	$html = str_replace("â", "&#10003;", $html);
+	return $html;
 }
 function error($msg){
 	echo json_encode(

@@ -67,7 +67,8 @@ $id = rand(0,10000);
 			$limit = $('.limit', $out),
 			page = 1,
 			start = 0,
-			limit = parseInt($('.dropdown', $limit).attr('data-value'));
+			limit = parseInt($('.dropdown', $limit).attr('data-value')),
+			numResults;
 
 		var go = function(){
 			$loading.removeClass('hidden');
@@ -100,7 +101,8 @@ $id = rand(0,10000);
 					$('.status', $pages).html('');
 					$('a', $pages).addClass('hidden');
 				}else{
-					$('.status', $pages).html('Showing results ' + (start+1) + " - " + (start + parseInt(limit)) + " of " + json.results);
+					numResults = json.results;
+					$('.status', $pages).html('Showing results ' + (start+1) + " - " + (start + parseInt(limit)) + " of " + numResults);
 					$('a', $pages).removeClass('hidden');
 				}
 				json.rows.forEach(function(row, i, rows){
@@ -135,8 +137,10 @@ $id = rand(0,10000);
 						e.preventDefault();
 						e.stopPropagation();
 						var target = $(e.target).attr('data-target');
-						$('#body_'+target).toggleClass('collapse');
-						$('#feed_'+target).toggleClass('active');
+						// $('#body_'+target).toggleClass('collapse');
+						// $('#feed_'+target).toggleClass('active');
+						$(this).parent().next().toggleClass('collapse');
+						$(this).parent().parent().toggleClass('active');
 					});
 
 					$results.append($feed).append("<hr/>");
@@ -171,7 +175,7 @@ $id = rand(0,10000);
 				start -= limit;
 				if (start < 0) start = 0;
 				go();
-			}else if (dir == 'next'){
+			}else if (dir == 'next' && start + limit < numResults ){
 				start += limit;
 				go();
 			}

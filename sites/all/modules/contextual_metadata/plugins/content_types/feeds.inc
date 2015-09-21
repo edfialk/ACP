@@ -79,7 +79,8 @@ function metadata_feeds_render($subtype, $conf, $panel_args, $context = NULL) {
       'papersUrl' => PAPERS_URL,
       'feedsUrl' => FEEDS_URL,
       'sortby' => variable_get('metadata_sortby', 'title'),
-      'sortdir' => variable_get('metadata_sortdir', 'ASC')
+      'sortdir' => variable_get('metadata_sortdir', 'ASC'),
+      'feedsFields' => variable_get('metadata_feedsfields', 'feed_id,link,type,title,pubdate,description,payload'),
     ),
   );
 

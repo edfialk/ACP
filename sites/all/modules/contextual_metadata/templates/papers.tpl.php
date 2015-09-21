@@ -69,7 +69,8 @@ $id = rand(0,10000);
 			$limit = $('.limit', $out),
 			page = 1,
 			start = 0,
-			limit = parseInt($('.dropdown', $limit).attr('data-value'));
+			limit = parseInt($('.dropdown', $limit).attr('data-value')),
+			numResults;
 
 		var go = function(){
 			$loading.removeClass('hidden');
@@ -103,22 +104,44 @@ $id = rand(0,10000);
 					$('.status', $pages).html('');
 					$('a', $pages).addClass('hidden');
 				}else{
-					$('.status', $pages).html('Showing results ' + (start+1) + " - " + (start + parseInt(limit)) + " of " + json.results);
+					numResults = json.results;
+					$('.status', $pages).html('Showing results ' + (start+1) + " - " + (start + parseInt(limit)) + " of " + numResults);
 					$('a', $pages).removeClass('hidden');
 				}
 				json.rows.forEach(function(row, i, rows){
-					var $payload = $(row.payload),
-						$mdurl = $payload.find('mdurl'),
-						$author = $payload.find('authors'),
-						cdataregexp = /<!--\[CDATA\[(.*)\]\]-->/,
-						link = cdataregexp.exec($mdurl.html())[1] || '';
-						author = cdataregexp.exec($author.html())[1],
-						title = Metadata.validate(row.title),
-						abstract = Metadata.validate(row.abstract),
-						$paper = $("<div id='paper_"+row.paper_id+"_"+id+"' class='paper'/>"),
+					try{
+						//suddenly this is json for some entries instead of all xml...ok...
+						var payload = JSON.parse(row.payload),
+							author = payload["dc:creator"],
+							title = Metadata.validate(payload["dc:title"]),
+							abstract = Metadata.validate(payload["prism:teaser"]),
+							paper_id = payload.eid,
+							link = "";
+
+						if (payload.link && Array.isArray(payload.link)){
+							payload.link.forEach(function(l, i){
+								if (l["@ref"] == "scidir"){
+									link = l["@href"];
+								}
+							});
+						}
+
+					}catch(e){
+						var $payload = $(row.payload),
+							$mdurl = $payload.find('mdurl'),
+							$author = $payload.find('authors'),
+							cdataregexp = /<!--\[CDATA\[(.*)\]\]-->/,
+							link = cdataregexp.exec($mdurl.html())[1] || '';
+							author = cdataregexp.exec($author.html())[1],
+							title = Metadata.validate(row.title),
+							abstract = Metadata.validate(row.abstract),
+							paper_id = row.paper_id;
+					}
+
+					var $paper = $("<div id='paper_"+paper_id+"_"+id+"' class='paper'/>"),
 						$head = $("<h4/>").appendTo($paper),
-						$title = $("<a href='"+link+"' data-target='"+row.paper_id+"_"+id+"'>"+title+"</a>").appendTo($head),
-						$body = $("<div id='body_"+row.paper_id+"_"+id+"' class='collapse'/>").appendTo($paper);
+						$title = $("<a href='"+link+"' data-target='"+paper_id+"_"+id+"'>"+title+"</a>").appendTo($head),
+						$body = $("<div id='body_"+paper_id+"_"+id+"' class='collapse'/>").appendTo($paper);
 
 					// console.log($payload);
 
@@ -142,8 +165,11 @@ $id = rand(0,10000);
 						e.preventDefault();
 						e.stopPropagation();
 						var target = $(e.target).attr('data-target');
-						$('#body_'+target).toggleClass('collapse');
-						$('#paper_'+target).toggleClass('active');
+						// $('#body_'+target).toggleClass('collapse');
+						// $('#paper_'+target).toggleClass('active');
+						$(this).parent().next().toggleClass('collapse');
+						$(this).parent().parent().toggleClass('active');
+
 					});
 
 					$results.append($paper);
@@ -177,7 +203,7 @@ $id = rand(0,10000);
 				start -= limit;
 				if (start < 0) start = 0;
 				go();
-			}else if (dir == 'next'){
+			}else if (dir == 'next' && start + limit < numResults ){
 				start += limit;
 				go();
 			}

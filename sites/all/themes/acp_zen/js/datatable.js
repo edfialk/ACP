@@ -6,12 +6,8 @@
     };
   }
 
-//  https://spreadsheets.google.com/feeds/cells/0ArbpQl2Q0oGRdG5lTGl2LUtTOHduczJaZC1CNy0tRUE/od6/private/full  <-- can get formulas but it's private!
-
-	// var spreadsheetKey = '0Aiz9YvG1OtuddGRQdUJKMXJoVTRfaURURW01V1BJOGc'; //<--- dev
   var spreadsheetKey = '0ArbpQl2Q0oGRdG5lTGl2LUtTOHduczJaZC1CNy0tRUE'; //<-- official
   var dataSourceUrl = 'https://docs.google.com/spreadsheet/pub?key='+spreadsheetKey+'&pub=1';
-  // var jsonUrl = 'https://spreadsheets.google.com/feeds/list/'+spreadsheetKey+'/od6/public/values?alt=json';
   var jsonUrl = 'http://54.191.97.139/goog.php';
   var $table, $intro, $temporal, $spatial, temporals, spatials;
   var ready = false;
@@ -73,6 +69,11 @@
 
     $table.on('xhr.dt', function(e, settings, json){
       ready = true;
+    });
+
+    $table.on('length.dt', function(e, settings, len){
+      var event = new CustomEvent('resize');
+      window.dispatchEvent(event);
     });
 
     var inputHandler = function(){
@@ -146,8 +147,8 @@
     //this is the table filtering function run on each row, return true to show the row, false to hide it
     $.fn.dataTableExt.afnFiltering.push(
       function( oSettings, aData, iDataIndex ) {
-        var show = false; //default to hide row
 
+        var show = false; //default to hide row
         var $params = $('.params input:checked');
         var $services = $('.services input:checked');
 

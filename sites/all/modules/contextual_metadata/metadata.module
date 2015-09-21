@@ -40,16 +40,30 @@ function metadata_admin() {
   	'#description' => t('The chunk for PapersView requests.'),
   	'#required' => TRUE,
   );
+  $form['metadata_papersfields'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Papers Output Fields'),
+    '#default_value' => variable_get('metadata_papersfields', 'paper_id,doi,title,abstract,pyear,payload'),
+    '#description' => t('These are the fields to be outputted. The results will be unique tuples for these selected output fields. Each field is separated by comma with no spaces between fields. For papers to be unique, legal fields are paper_id, doi, internal_id, title, ptype, pyear, abstract, and payload. Other fields are kws_id, src_id, qexpression, harvestdate, ms, sensor_id, param_id, param_tag, app_id, and app_tag. However, including any of the fields in the latter group in the output fields could lead to “duplicated” papers in terms of paper_id or title.'),
+    '#required' => TRUE,
+  );
+  $form['metadata_feedsfields'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Feeds Output Fields'),
+    '#default_value' => variable_get('metadata_feedsfields', 'feed_id,link,type,title,pubdate,description,payload'),
+    '#description' => t('These are the fields to be outputted. The results will be unique tuples for these selected output fields. Each field is separated by comma with no spaces between fields. For feeds to be unique, legal fields are feed_id, link, type, title, pubdate, description, and payload. Other fields are kws_id, src_id, qexpression, harvestdate, ms, sensor_id, param_id, param_tag, app_id, and app_tag. However, including any of the fields in the latter group in the output fields could lead to “duplicated” feeds in terms of feed_id or title.'),
+    '#required' => TRUE,
+  );
   return system_settings_form($form);
 }
 
 function metadata_menu() {
   $items = array();
   $items['admin/contextual/settings'] = array(
-    'title' => 'Contextual metadata module settings',
+    'title' => 'Contextual metadata settings',
     'description' => 'Settings for the contextual metadata module',
-    // 'page callback' => 'drupal_get_form',
-     'page callback' => 'metadata_admin_page',
+    'page callback' => 'drupal_get_form',
+     // 'page callback' => 'metadata_admin_page',
     'page arguments' => array('metadata_admin'),
     'access arguments' => array('administer Contextual Metadata settings'),
     'type' => MENU_NORMAL_ITEM,
@@ -99,5 +113,5 @@ function metadata_theme() {
 }
 
 function metadata_admin_page() {
-  return theme('metadata_dashbaord');
+  return theme('metadata_dashboard');
 }
